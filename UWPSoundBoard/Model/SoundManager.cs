@@ -20,6 +20,8 @@ namespace UWPSoundBoard.Model
             //sounds = getSounds();
             //Every type has to match getSounds() returns a list and sounds is Observable collection ..hence squiggly
             var allSounds = getSounds();
+            sounds.Clear();
+
             // foreach(var sound in allSounds)
             // {
             //    sounds.Add(sound);
@@ -29,6 +31,15 @@ namespace UWPSoundBoard.Model
             allSounds.ForEach(sound => sounds.Add(sound));//lambda expression
 
 
+
+        }
+        public static void GetSoundsByCategory(ObservableCollection<Sound> sounds,SoundCategory category)
+        {
+            var allSounds = getSounds();
+           var filteredSounds= allSounds.Where(sound => sound.Category == category).ToList();
+
+            sounds.Clear();
+            filteredSounds.ForEach(sound => sounds.Add(sound));//lambda expression
 
         }
         //method to return a list of sound back
@@ -48,5 +59,6 @@ namespace UWPSoundBoard.Model
 
 
         }
+
     }
 }

@@ -26,6 +26,9 @@ namespace UWPSoundBoard
     {
         //Create an observable collection
         private ObservableCollection<Sound> Sounds;
+        //Creating a list 
+        private List<MenuItem> MenuItems;
+
         public MainPage()
         {
 
@@ -33,6 +36,49 @@ namespace UWPSoundBoard
            //Instantitaing in the constructor
             Sounds = new ObservableCollection<Sound>();
             SoundManager.GetAllSounds(Sounds);
+            //Creating menu items
+            MenuItems = new List<MenuItem>();
+            MenuItems.Add(new MenuItem { IconFile = "Assets/Icons/animals.png", Category = SoundCategory.Animals });
+            MenuItems.Add(new MenuItem { IconFile = "Assets/Icons/cartoon.png", Category = SoundCategory.Cartoons });
+            MenuItems.Add(new MenuItem { IconFile = "Assets/Icons/taunt.png", Category = SoundCategory.Taunts });
+            MenuItems.Add(new MenuItem { IconFile = "Assets/Icons/warning.png", Category = SoundCategory.Warnings });
+
+            BackButton.Visibility = Visibility.Collapsed;
+
+
+        }
+
+        //When you click on hamburger button this is the method that will invoke
+        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
+        {
+            //If pane is open it should close and vice versa
+            MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
+
+        }
+
+        private void MenuItemsList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var menuItem = (MenuItem)e.ClickedItem;
+            CategoryTextBlock.Text = menuItem.Category.ToString();
+            SoundManager.GetSoundsByCategory(Sounds, menuItem.Category);
+            BackButton.Visibility = Visibility.Visible;
+
+        }
+
+        private void SoundGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var sound = (Sound)e.ClickedItem;
+            MyMediaElement.Source = new Uri(BaseUri, sound.AudioFile);
+
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            SoundManager.GetAllSounds(Sounds);
+            CategoryTextBlock.Text = "All Sounds";
+            MenuItemsListView.SelectedItem = null;
+            BackButton.Visibility = Visibility.Collapsed;
+
 
         }
     }
